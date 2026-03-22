@@ -1,5 +1,4 @@
 module.exports = async (req, res) => {
-  // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -18,7 +17,7 @@ module.exports = async (req, res) => {
   try {
     const https = require('https');
     
-    const data = JSON.stringify({
+    const requestBody = JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       messages: [
         { role: 'system', content: system },
@@ -35,37 +34,49 @@ module.exports = async (req, res) => {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
-        'Content-Length': data.length
+        'Content-Length': Buffer.byteLength(requestBody)
       }
     };
 
     const apiResponse = await new Promise((resolve, reject) => {
       const apiReq = https.request(options, (apiRes) => {
         let body = '';
-        apiRes.on('data', (chunk) => body += chunk);
+        apiRes.on('data', (chunk) => {
+          body += chunk.toString();
+        });
         apiRes.on('end', () => {
           try {
-            resolve({ statusCode: apiRes.statusCode, data: JSON.parse(body) });
+            const parsed = JSON.parse(body);
+            resolve({ statusCode: apiRes.statusCode, data: parsed });
           } catch (e) {
-            reject(e);
+            console.error('JSON parse error:', e);
+            console.error('Response body:', body);
+            reject(new Error('Failed to parse API response'));
           }
         });
       });
-      apiReq.on('error', reject);
-      apiReq.write(data);
+      
+      apiReq.on('error', (e) => {
+        console.error('Request error:', e);
+        reject(e);
+      });
+      
+      apiReq.write(requestBody);
       apiReq.end();
     });
 
     if (apiResponse.statusCode !== 200) {
+      console.error('API error:', apiResponse.data);
       return res.status(apiResponse.statusCode).json({ 
         error: apiResponse.data.error?.message || 'API request failed' 
       });
     }
 
     const reply = apiResponse.data.choices?.[0]?.message?.content || '';
-    res.status(200).json({ reply });
+    return res.status(200).json({ reply });
+    
   } catch (error) {
     console.error('Server error:', error);
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
