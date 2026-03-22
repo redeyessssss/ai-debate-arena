@@ -11,7 +11,13 @@ Powered by Groq AI (Llama 3.3 70B).
 npm install
 ```
 
-2. Start the server:
+2. Create a `.env` file with your Groq API key:
+```bash
+cp .env.example .env
+# Edit .env and add your Groq API key
+```
+
+3. Start the server:
 ```bash
 npm start
 ```
