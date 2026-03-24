@@ -12,7 +12,11 @@ module.exports = async (req, res) => {
   }
 
   const { system, message } = req.body;
-  const apiKey = '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';
+  const apiKey = process.env.GROQ_API_KEY;
+
+  if (!apiKey) {
+    return res.status(500).json({ error: 'API key not configured' });
+  }
 
   try {
     const https = require('https');

@@ -1,41 +1,77 @@
 # AI Debate Arena
 
-Two AI advocates debate any topic you choose — one argues FOR, one argues AGAINST.
+A cyberpunk-styled web application where two AI advocates debate any topic in real-time.
 
-Powered by Groq AI (Llama 3.3 70B).
+## Features
+
+- **Dual AI Debaters**: Advocate Alpha argues FOR the topic, Advocate Beta argues AGAINST
+- **Real-time Debates**: Watch AI arguments unfold with typing indicators
+- **Cyberpunk UI**: Beautiful gradient design with responsive layout
+- **Mobile Friendly**: Optimized for both desktop and mobile devices
+- **Keyboard Shortcuts**: Press F to stop debates anytime
+
+## Tech Stack
+
+- Frontend: Vanilla HTML/CSS/JavaScript
+- Backend: Vercel Serverless Functions
+- AI: Groq API (Llama 3.3 70B)
 
 ## Setup
 
-1. Install dependencies:
+### Local Development
+
+1. Clone the repository:
+```bash
+git clone https://github.com/redeyessssss/ai-debate-arena.git
+cd ai-debate-arena
+```
+
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Create a `.env` file with your Groq API key:
+3. Create a `.env` file:
 ```bash
 cp .env.example .env
-# Edit .env and add your Groq API key
 ```
 
-3. Start the server:
+4. Add your Groq API key to `.env`:
+```
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+5. Run the server:
 ```bash
-npm start
+node server.js
 ```
 
-3. Open your browser to `http://localhost:3000`
+6. Open `http://localhost:3000` in your browser
+
+### Vercel Deployment
+
+1. Fork this repository
+2. Import to Vercel
+3. Add environment variable in Vercel dashboard:
+   - Key: `GROQ_API_KEY`
+   - Value: Your Groq API key
+4. Deploy!
+
+## Getting a Groq API Key
+
+1. Visit [Groq Console](https://console.groq.com/)
+2. Sign up for a free account
+3. Navigate to API Keys section
+4. Create a new API key
+5. Copy and use in your `.env` file
 
 ## Usage
 
-- Enter any debate topic
-- Click "Start" to begin
-- Watch Alpha (FOR) and Beta (AGAINST) debate in real-time
-- Click "Stop" to end the debate at any time
+1. Enter a debate topic (e.g., "Is AI good for humanity?")
+2. Click "Start" to begin the debate
+3. Watch Alpha and Beta argue their positions
+4. Press "Stop" or "F" key to end the debate anytime
 
-## Alternative: Standalone Version
+## License
 
-Open `standalone.html` directly in your browser - no server needed!
-
-## Requirements
-
-- Node.js 14+
-- Uses Groq API (free tier, key included)
+MIT License - see LICENSE file for details
